@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Button, Card } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import './Task.css'
 
 class Task extends Component {
     state = {
@@ -17,9 +18,10 @@ class Task extends Component {
     }
     render() {
         const task = this.props.data
+        const { checked } = this.state
 
         return (
-            <Card style={{ width: '18rem' }} className={this.state.checked}>
+            <Card style={{ width: '18rem' }} className={checked ? 'task' : ''}>
                 <Card.Body>
                     <input type='checkbox' onClick={this.onCheck} />
                     <Card.Title>{task.text}</Card.Title>

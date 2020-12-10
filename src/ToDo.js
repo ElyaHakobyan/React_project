@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
 import Task from './Task'
-import { Container, Col, Row, InputGroup, FormControl, Button, Card } from 'react-bootstrap'
+import { Container, Col, Row, InputGroup, FormControl, Button } from 'react-bootstrap'
 import idGenerator from './idGenerator'
+import ConfirmDelete from './Modal'
+
 
 class ToDo extends Component {
     state = {
         tasks: [],
         inputValue: '',
-        selectedTasks: new Set()
+        selectedTasks: new Set(),
+        toggle: false
     }
 
     handleChange = (event) => {
@@ -30,7 +33,14 @@ class ToDo extends Component {
         })
     }
 
+    toggleConfirm = () => {
+        this.setState({
+            toggle: !this.state.toggle
+        })
+    }
+
     handleMultipleDelete = () => {
+        console.log(this.state.selectedTasks)
         let tasks = [...this.state.tasks]
         this.state.selectedTasks.forEach((id) => {
             tasks = tasks.filter((task) => task._id !== id)
@@ -38,7 +48,8 @@ class ToDo extends Component {
 
         this.setState({
             tasks: tasks,
-            selectedTasks: new Set()
+            selectedTasks: new Set(),
+            toggle: false
         })
     }
 
@@ -60,7 +71,6 @@ class ToDo extends Component {
     }
 
     handleDelete = (id) => {
-        console.log(id)
         const newArr = this.state.tasks.filter((el) => el._id !== id)
 
         this.setState({
@@ -86,6 +96,7 @@ class ToDo extends Component {
                                     value={this.state.inputValue}
                                     onChange={this.handleChange}
                                     onKeyDown={(event) => this.handleKeyDown(event)}
+                                    disabled={!!this.state.selectedTasks.size}
                                 />
                                 <InputGroup.Append>
                                     <Button
@@ -100,9 +111,9 @@ class ToDo extends Component {
                     </Row>
                     <Row className='justify-content-center'>
                         <Button
-                            onClick={this.handleMultipleDelete}
-                            disabled={this.state.selectedTasks.size === 0 ? true : false}
                             variant='danger'
+                            onClick={this.toggleConfirm}
+                            disabled={this.state.selectedTasks.size === 0 ? true : false}
                         >
                             Delete
                         </Button>
@@ -111,26 +122,20 @@ class ToDo extends Component {
                 <Row className='justify-content-center'>
                     {
                         this.state.tasks.map((task, i) => {
-                            return <Task data={task} onRemove={this.handleDelete} handleCheck={this.handleCheck}/>
-                           {/* <Card key={i} style={{ width: '18rem' }} className='justify-content-center'>
-                                 <Card.Body>
-                                    <input type='checkbox' onClick={() => this.handleCheck(task._id)} />
-                                    <Card.Title>{task.text}</Card.Title>
-                                    <Card.Text>
-                                        {task.text}
-
-                                    </Card.Text>
-                                    <Button
-                                        onClick={() => this.handleDelete(task._id)}
-                                        variant='danger'
-                                    >
-                                        <FontAwesomeIcon icon={faTrash} />
-                                    </Button>
-                                </Card.Body>
-                            </Card> */}
+                            return <Task
+                                data={task}
+                                onRemove={this.handleDelete}
+                                handleCheck={this.handleCheck}
+                            />
                         })
                     }
                 </Row>
+                <ConfirmDelete
+                    count={this.state.selectedTasks.size}
+                    toggle={this.state.toggle}
+                    onClose={this.toggleConfirm}
+                    delete={this.handleMultipleDelete}
+                />
             </div>
         )
     }
