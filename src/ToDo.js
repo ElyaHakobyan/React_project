@@ -1,16 +1,18 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import Task from './Task'
+import EditTaskModal from './EditTaskModal'
 import { Container, Col, Row, InputGroup, FormControl, Button } from 'react-bootstrap'
 import idGenerator from './idGenerator'
 import ConfirmDelete from './Modal'
 
 
-class ToDo extends Component {
+class ToDo extends PureComponent {
     state = {
         tasks: [],
         inputValue: '',
         selectedTasks: new Set(),
-        toggle: false
+        toggle: false,
+        editTask: null
     }
 
     handleChange = (event) => {
@@ -36,6 +38,12 @@ class ToDo extends Component {
     toggleConfirm = () => {
         this.setState({
             toggle: !this.state.toggle
+        })
+    }
+
+    toggleEditModal = (task) => {
+        this.setState({
+            editTask: task
         })
     }
 
@@ -84,7 +92,26 @@ class ToDo extends Component {
         }
     }
 
+    handleEdit = (task) => {
+        this.setState({
+            editTask: task
+        })
+    }
+
+    f = (task) => {
+        const changedItemIndex = this.state.tasks.findIndex((el) => el._id == task._id)
+        const tasks = this.state.tasks
+        tasks[changedItemIndex] = task
+
+
+        this.setState({
+            tasks: tasks,
+            editTask: null
+        })
+    }
+
     render() {
+        const { editTask } = this.state
         return (
             <div className='container'>
                 <Container className='mt-4'>
@@ -126,6 +153,7 @@ class ToDo extends Component {
                                 data={task}
                                 onRemove={this.handleDelete}
                                 handleCheck={this.handleCheck}
+                                onEdit={() => this.toggleEditModal(task)}
                             />
                         })
                     }
@@ -136,6 +164,12 @@ class ToDo extends Component {
                     onClose={this.toggleConfirm}
                     delete={this.handleMultipleDelete}
                 />
+                {
+                    !!this.state.editTask && <EditTaskModal
+                        data={editTask}
+                        onSave={(task) => this.f(task)} 
+                        onClose={() => this.toggleEditModal(null)}/>
+                }
             </div>
         )
     }

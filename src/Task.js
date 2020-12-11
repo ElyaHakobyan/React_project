@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Button, Card } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import './Task.css'
 
 class Task extends Component {
@@ -35,6 +36,13 @@ class Task extends Component {
                         disabled={this.state.checked}
                     >
                         <FontAwesomeIcon icon={faTrash} />
+                    </Button>
+                    <Button
+                        variant='primary'
+                        onClick={() => this.props.onEdit(task)}
+                        disabled={this.state.checked}
+                    >
+                        <FontAwesomeIcon icon={faEdit} />
                     </Button>
                 </Card.Body>
             </Card>
