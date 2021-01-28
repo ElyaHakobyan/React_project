@@ -13,7 +13,7 @@ class EditTaskModal extends Component {
 
     handleChange = (event) => {
         this.setState({
-            text: event.target.value
+            title: event.target.value
         })
     }
 

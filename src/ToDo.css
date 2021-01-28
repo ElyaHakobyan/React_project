@@ -1,0 +1,5 @@
+.deleteSelected[disabled] {
+    background-color: darkgrey;
+    border-color: darkgrey;
+    color: black;
+}

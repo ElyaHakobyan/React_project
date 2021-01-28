@@ -3,6 +3,7 @@ import { Button, Card } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
+import  PropTypes from 'prop-types'
 import './Task.css'
 
 class Task extends Component {
@@ -22,13 +23,16 @@ class Task extends Component {
         const { checked } = this.state
 
         return (
-            <Card style={{ width: '18rem' }} className={checked ? 'task' : ''}>
+            <Card
+                className={checked ? 'task' : ''}
+                key={task._id}
+                style={{ width: '18rem' }}
+            >
                 <Card.Body>
                     <input type='checkbox' onClick={this.onCheck} />
-                    <Card.Title>{task.text}</Card.Title>
+                    <Card.Title>{task.title}</Card.Title>
                     <Card.Text>
-                        {task.text}
-
+                        {task.description}
                     </Card.Text>
                     <Button
                         onClick={() => this.props.onRemove(task._id)}
@@ -52,3 +56,9 @@ class Task extends Component {
 }
 
 export default Task
+
+Task.propTypes = {
+    data: PropTypes.object,
+    onRemove: PropTypes.func,
+    onEdit: PropTypes.func
+}
